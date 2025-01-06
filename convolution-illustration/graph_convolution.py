@@ -11,6 +11,22 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 
 
+
+input_sequence = np.array([])
+impulse_response = np.array([])
+
+output = np.zeros(len(input_sequence))
+
+# tmp is the time-inverted and shifted impulse response at each step of the convolution
+tmp = np.zeros(len(input_sequence))
+
+
+def animate_convolution_step(i):
+    return
+
+
+
+
 '''
 This function creates the convolution:
 
@@ -40,7 +56,18 @@ def create_convolution(s1, s2):
 
 
 def create_convolution_algorithm_animation(s1, s2):
+    sequence_lengths = len(s1)
     conv = create_convolution(s1, s2)
+
+    plt.figure(figsize=(9,7))
+    plt.subplot(311)
+    plt.stem([i for i in range(sequence_lengths)], s1, basefmt='b')
+    plt.subplot(312)
+    plt.stem([i for i in range(sequence_lengths)], s2, basefmt='b')
+    plt.subplot(313)
+    plt.stem([i for i in range(sequence_lengths)], conv, basefmt='b')
+
+    plt.show()
         
 
 
@@ -60,18 +87,44 @@ assert(len(input_sequence) == sequence_lengths)
 # impulse response is exponential decay
 alpha = 0.9
 impulse_response = np.array([(alpha**x) for x in range(sequence_lengths)])
-# print(impulse_response)
 
-conv = create_convolution(input_sequence, impulse_response)
 
-print(impulse_response)
+create_convolution_algorithm_animation(input_sequence, impulse_response)
 
-plt.figure(figsize=(9,7))
-plt.subplot(311)
-plt.stem([i for i in range(sequence_lengths)], input_sequence, basefmt='b')
-plt.subplot(312)
-plt.stem([i for i in range(sequence_lengths)], input_sequence, basefmt='b')
-plt.subplot(313)
-plt.stem([i for i in range(sequence_lengths)], conv, basefmt='b')
 
-plt.show()
+from matplotlib import pyplot as plt 
+import numpy as np 
+from matplotlib.animation import FuncAnimation  
+   
+# initializing a figure in  
+# which the graph will be plotted 
+fig = plt.figure()  
+   
+# marking the x-axis and y-axis 
+axis = plt.axes(xlim =(0, 4),  
+                ylim =(-2, 2))  
+  
+# initializing a line variable 
+line, = axis.plot([], [], lw = 3)  
+   
+# data which the line will  
+# contain (x, y) 
+def init():  
+    line.set_data([], []) 
+    return line, 
+   
+def animate(i): 
+    x = np.linspace(0, 4, 1000) 
+   
+    # plots a sine graph 
+    y = np.sin(2 * np.pi * (x - 0.01 * i)) 
+    line.set_data(x, y) 
+      
+    return line, 
+   
+anim = FuncAnimation(fig, animate, init_func = init, 
+                     frames = 200, interval = 20, blit = True) 
+  
+   
+anim.save('continuousSineWave.mp4',  
+          writer = 'ffmpeg', fps = 30) 
