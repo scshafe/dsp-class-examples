@@ -54,13 +54,19 @@ def create_convolution(s1, s2):
     return output
 
 
-
+'''
+function to call for each frame of the animation. There are 3 plots:
+1. The input sequence 
+2. The inverse-shifted impulse response (which slides over each iteration)
+3. The output calculated (done incrementally at each step)
+'''
 def create_convolution_algorithm_animation(s1, s2):
     sequence_lengths = len(s1)
     conv = create_convolution(s1, s2)
 
     plt.figure(figsize=(9,7))
     plt.subplot(311)
+
     plt.stem([i for i in range(sequence_lengths)], s1, basefmt='b')
     plt.subplot(312)
     plt.stem([i for i in range(sequence_lengths)], s2, basefmt='b')
