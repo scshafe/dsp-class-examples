@@ -11,22 +11,6 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 
 
-
-input_sequence = np.array([])
-impulse_response = np.array([])
-
-output = np.zeros(len(input_sequence))
-
-# tmp is the time-inverted and shifted impulse response at each step of the convolution
-tmp = np.zeros(len(input_sequence))
-
-
-def animate_convolution_step(i):
-    return
-
-
-
-
 '''
 This function creates the convolution:
 
@@ -54,83 +38,113 @@ def create_convolution(s1, s2):
     return output
 
 
+
+sequence_lengths=20
+input_unpadded = np.array([1,2,3])
+input_sequence = np.pad(input_unpadded, [0, sequence_lengths - len(input_unpadded)])
+
+alpha = 0.9
+impulse_response = np.array([(alpha**x) for x in range(sequence_lengths)])
+
+x = np.array([i for i in range(sequence_lengths)])
+
+output = np.zeros(sequence_lengths)
+
+
+# Create figure and subplots
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 6))
+
+
+# Line objects for each plot
+line1, = ax1.stem(x, input_sequence)
+line2, = ax2.stem(x, impulse_response)
+line3, = ax3.stem(x, output)
+
+# Animation update function
+# def animate(i):
+#     y1 = np.sin(x + i / 10)
+#     y2 = np.cos(x + i / 10)
+#     y3 = np.tan(x + i / 10)
+
+#     line1.set_ydata(y1)
+#     line2.set_ydata(y2)
+#     line3.set_ydata(y3)
+
+#     return line1, line2, line3
+
+
 '''
-function to call for each frame of the animation. There are 3 plots:
+Function to call for each frame of the animation. There are 3 plots:
 1. The input sequence 
 2. The inverse-shifted impulse response (which slides over each iteration)
 3. The output calculated (done incrementally at each step)
 '''
-def create_convolution_algorithm_animation(s1, s2):
-    sequence_lengths = len(s1)
-    conv = create_convolution(s1, s2)
+def create_convolution_algorithm_animation(frame_num):
 
-    plt.figure(figsize=(9,7))
-    plt.subplot(311)
+    tmp = np.array(impulse_response[frame_num::-1])
+    tmp = np.pad(tmp, [0, len(input_sequence) - len(tmp)])
 
-    plt.stem([i for i in range(sequence_lengths)], s1, basefmt='b')
-    plt.subplot(312)
-    plt.stem([i for i in range(sequence_lengths)], s2, basefmt='b')
-    plt.subplot(313)
-    plt.stem([i for i in range(sequence_lengths)], conv, basefmt='b')
+    inner_product = input_sequence * tmp
 
-    plt.show()
+    output[frame_num] = inner_product
+
+    line2.set_ydata(tmp)
+    line3.set_ydata(output)
+    print("HERE")
+
+
+
+    return line1, line2, line3
         
 
+anim = FuncAnimation(fig, create_convolution_algorithm_animation, #init_func = init, 
+                     frames = 20, interval = 1, blit = True) 
 
 
 
-
-
-
-
-sequence_lengths=20
-
-input_unpadded = np.array([0,0,0,2,3,1])
-input_sequence = np.pad(input_unpadded, [0, sequence_lengths - len(input_unpadded)])
 # print(input_sequence)
 assert(len(input_sequence) == sequence_lengths)
 
 # impulse response is exponential decay
-alpha = 0.9
-impulse_response = np.array([(alpha**x) for x in range(sequence_lengths)])
 
 
-create_convolution_algorithm_animation(input_sequence, impulse_response)
+
+# create_convolution_algorithm_animation(input_sequence, impulse_response)
 
 
-from matplotlib import pyplot as plt 
-import numpy as np 
-from matplotlib.animation import FuncAnimation  
+# from matplotlib import pyplot as plt 
+# import numpy as np 
+# from matplotlib.animation import FuncAnimation  
    
-# initializing a figure in  
-# which the graph will be plotted 
-fig = plt.figure()  
+# # initializing a figure in  
+# # which the graph will be plotted 
+# fig = plt.figure()  
    
-# marking the x-axis and y-axis 
-axis = plt.axes(xlim =(0, 4),  
-                ylim =(-2, 2))  
+# # marking the x-axis and y-axis 
+# axis = plt.axes(xlim =(0, 4),  
+#                 ylim =(-2, 2))  
   
-# initializing a line variable 
-line, = axis.plot([], [], lw = 3)  
+# # initializing a line variable 
+# line, = axis.plot([], [], lw = 3)  
    
-# data which the line will  
-# contain (x, y) 
-def init():  
-    line.set_data([], []) 
-    return line, 
+# # data which the line will  
+# # contain (x, y) 
+# def init():  
+#     line.set_data([], []) 
+#     return line, 
    
-def animate(i): 
-    x = np.linspace(0, 4, 1000) 
+# def animate(i): 
+#     x = np.linspace(0, 4, 1000) 
    
-    # plots a sine graph 
-    y = np.sin(2 * np.pi * (x - 0.01 * i)) 
-    line.set_data(x, y) 
+#     # plots a sine graph 
+#     y = np.sin(2 * np.pi * (x - 0.01 * i)) 
+#     line.set_data(x, y) 
       
-    return line, 
+#     return line, 
    
-anim = FuncAnimation(fig, animate, init_func = init, 
-                     frames = 200, interval = 20, blit = True) 
+# anim = FuncAnimation(fig, animate, init_func = init, 
+#                      frames = 200, interval = 20, blit = True) 
   
    
-anim.save('continuousSineWave.mp4',  
-          writer = 'ffmpeg', fps = 30) 
+# anim.save('continuousSineWave.mp4',  
+#           writer = 'ffmpeg', fps = 30) 
