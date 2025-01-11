@@ -8,7 +8,7 @@ This file highlights the commutative nature of convolution
 import numpy as np
 import matplotlib.pyplot as plt
 
-from matplotlib import animation
+from matplotlib.animation import FuncAnimation
 
 
 '''
@@ -56,9 +56,13 @@ fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 6))
 
 
 # Line objects for each plot
-line1, = ax1.stem(x, input_sequence)
-line2, = ax2.stem(x, impulse_response)
-line3, = ax3.stem(x, output)
+ax1.stem(x, input_sequence)
+ax2.stem(x, impulse_response)
+ax3.stem(x, output)
+
+line1 = ax1.stem(x, input_sequence)
+line2 = ax2.stem(x, impulse_response)
+line3 = ax3.stem(x, output)
 
 # Animation update function
 # def animate(i):
@@ -73,6 +77,9 @@ line3, = ax3.stem(x, output)
 #     return line1, line2, line3
 
 
+def init():
+    return line1, line2, line3
+
 '''
 Function to call for each frame of the animation. There are 3 plots:
 1. The input sequence 
@@ -80,71 +87,27 @@ Function to call for each frame of the animation. There are 3 plots:
 3. The output calculated (done incrementally at each step)
 '''
 def create_convolution_algorithm_animation(frame_num):
+    print(frame_num)
 
     tmp = np.array(impulse_response[frame_num::-1])
     tmp = np.pad(tmp, [0, len(input_sequence) - len(tmp)])
 
-    inner_product = input_sequence * tmp
+    inner_product = np.sum(input_sequence * tmp)
 
+    print(inner_product)
     output[frame_num] = inner_product
 
-    line2.set_ydata(tmp)
-    line3.set_ydata(output)
-    print("HERE")
-
-
+    line1.set_data(x, input_sequence)
+    line2.set_data(x, tmp)
+    line3.set_data(x, output)
 
     return line1, line2, line3
-        
+    # line2.set_ydata(tmp)
+    # line3.set_ydata(output)
 
-anim = FuncAnimation(fig, create_convolution_algorithm_animation, #init_func = init, 
+
+# anim = FuncAnimation(fig, create_convolution_algorithm_animation, #init_func = init, 
+#                      frames = 20, interval = 1, blit = True) 
+
+anim = FuncAnimation(fig, create_convolution_algorithm_animation,
                      frames = 20, interval = 1, blit = True) 
-
-
-
-# print(input_sequence)
-assert(len(input_sequence) == sequence_lengths)
-
-# impulse response is exponential decay
-
-
-
-# create_convolution_algorithm_animation(input_sequence, impulse_response)
-
-
-# from matplotlib import pyplot as plt 
-# import numpy as np 
-# from matplotlib.animation import FuncAnimation  
-   
-# # initializing a figure in  
-# # which the graph will be plotted 
-# fig = plt.figure()  
-   
-# # marking the x-axis and y-axis 
-# axis = plt.axes(xlim =(0, 4),  
-#                 ylim =(-2, 2))  
-  
-# # initializing a line variable 
-# line, = axis.plot([], [], lw = 3)  
-   
-# # data which the line will  
-# # contain (x, y) 
-# def init():  
-#     line.set_data([], []) 
-#     return line, 
-   
-# def animate(i): 
-#     x = np.linspace(0, 4, 1000) 
-   
-#     # plots a sine graph 
-#     y = np.sin(2 * np.pi * (x - 0.01 * i)) 
-#     line.set_data(x, y) 
-      
-#     return line, 
-   
-# anim = FuncAnimation(fig, animate, init_func = init, 
-#                      frames = 200, interval = 20, blit = True) 
-  
-   
-# anim.save('continuousSineWave.mp4',  
-#           writer = 'ffmpeg', fps = 30) 
