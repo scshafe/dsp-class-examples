@@ -65,7 +65,7 @@ class ConvolutionAnimator:
         self.s1 = input_sequence
         self.s2 = impulse_response
         self.output = np.zeros(sequence_lengths)
-        self.fig, (self.ax1, self.ax2, self.ax3) = plt.subplots(3, 1, figsize=(8, 6))
+        self.fig, (self.ax1, self.ax2, self.ax3) = plt.subplots(3, 1, figsize=(12, 10))
 
     def animation_init(self):
         self.ax1.set_title("input sequence")
@@ -85,7 +85,7 @@ class ConvolutionAnimator:
     3. The output calculated (done incrementally at each step)
     '''
     def create_convolution_algorithm_animation(self, frame_num):
-        print(frame_num)
+        # print(frame_num)
 
         self.ax1.cla()
         self.ax2.cla()
@@ -100,7 +100,7 @@ class ConvolutionAnimator:
 
         inner_product = np.sum(self.s1 * tmp)
 
-        print(inner_product)
+        # print(inner_product)
         self.output[frame_num] = inner_product
 
 
@@ -123,7 +123,7 @@ class ConvolutionAnimator:
 # the regular convolution
 ca = ConvolutionAnimator(input_sequence, impulse_response)
 
-anim = FuncAnimation(ca.fig, ca.create_convolution_algorithm_animation, init_func=ca.animation_init,
+anim = FuncAnimation(ca.fig, ca.create_convolution_algorithm_animation, #init_func=ca.animation_init,
                      frames = 20, interval = 200) 
 if save_gifs:
     anim.save("convolution.gif")
@@ -135,5 +135,6 @@ anim = FuncAnimation(commutative_animator.fig, commutative_animator.create_convo
                      frames = 20, interval = 200)
 if save_gifs:
     anim.save("commutative-convolution.gif")
-plt.show()
+# plt.show()
+
 
