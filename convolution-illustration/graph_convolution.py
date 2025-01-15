@@ -11,6 +11,9 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 
+save_gifs = True if input("would you like to save GIFs? [y]") == "y" else False
+
+
 '''
 This function creates the convolution:
 
@@ -64,10 +67,14 @@ class ConvolutionAnimator:
         self.output = np.zeros(sequence_lengths)
         self.fig, (self.ax1, self.ax2, self.ax3) = plt.subplots(3, 1, figsize=(8, 6))
 
-    def init():
-        markerline1, stemlines1, baseline1 = ax1.stem(x, empty, '-.')
-        markerline2, stemlines2, baseline2 = ax2.stem(x, empty, '-.')
-        markerline3, stemlines3, baseline3 = ax3.stem(x, empty, '-.')
+    def animation_init(self):
+        self.ax1.set_title("input sequence")
+        self.ax2.set_title("inverted shifted impulse response")
+        self.ax2.se
+        self.ax3.set_title("output")
+        markerline1, stemlines1, baseline1 = self.ax1.stem(x, empty, '-.')
+        markerline2, stemlines2, baseline2 = self.ax2.stem(x, empty, '-.')
+        markerline3, stemlines3, baseline3 = self.ax3.stem(x, empty, '-.')
         return markerline1, stemlines1, baseline1, markerline2, stemlines2, baseline2, markerline3, stemlines3, baseline3
         # return line1, line2, line3
 
@@ -83,6 +90,10 @@ class ConvolutionAnimator:
         self.ax1.cla()
         self.ax2.cla()
         self.ax3.cla()
+
+        self.ax1.set_title("input sequence")
+        self.ax2.set_title("inverted shifted impulse response")
+        self.ax3.set_title("output")
 
         tmp = np.array(self.s2[frame_num::-1])
         tmp = np.pad(tmp, [0, len(self.s1) - len(tmp)])
@@ -112,15 +123,17 @@ class ConvolutionAnimator:
 # the regular convolution
 ca = ConvolutionAnimator(input_sequence, impulse_response)
 
-anim = FuncAnimation(ca.fig, ca.create_convolution_algorithm_animation, 
+anim = FuncAnimation(ca.fig, ca.create_convolution_algorithm_animation, init_func=ca.animation_init,
                      frames = 20, interval = 200) 
-anim.save("convolution.gif")
+if save_gifs:
+    anim.save("convolution.gif")
 
 # ~~~~~ THE COMMUTATIVE CONVOLUTION
 commutative_animator = ConvolutionAnimator(impulse_response, input_sequence)
 
 anim = FuncAnimation(commutative_animator.fig, commutative_animator.create_convolution_algorithm_animation, 
                      frames = 20, interval = 200)
-anim.save("commutative-convolution.gif")
+if save_gifs:
+    anim.save("commutative-convolution.gif")
 plt.show()
 
