@@ -67,6 +67,8 @@ class ConvolutionAnimator:
         self.output = np.zeros(sequence_lengths)
         self.fig, (self.ax1, self.ax2, self.ax3) = plt.subplots(3, 1, figsize=(12, 10))
 
+        self.ax3.set_ylim(0,5)
+
     def animation_init(self):
         self.ax1.set_title("input sequence")
         self.ax2.set_title("inverted shifted impulse response")
@@ -95,6 +97,10 @@ class ConvolutionAnimator:
         self.ax2.set_title("inverted shifted impulse response")
         self.ax3.set_title("output")
 
+        self.ax2.set_ylim(0,1.1)
+        # self.ax2.set_
+        self.ax3.set_ylim(0,6)
+
         tmp = np.array(self.s2[frame_num::-1])
         tmp = np.pad(tmp, [0, len(self.s1) - len(tmp)])
 
@@ -112,7 +118,7 @@ class ConvolutionAnimator:
         markerline2, stemlines2, baseline2 = self.ax2.stem(x, tmp, '-.')
         markerline3, stemlines3, baseline3 = self.ax3.stem(x, self.output, '-.')
         # return line1, line2, line3
-        return stemlines1, stemlines2, stemlines3
+        return markerline1, stemlines1, markerline2, stemlines2, markerline3, stemlines3
 
 
 
