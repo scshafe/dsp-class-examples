@@ -93,26 +93,21 @@ class ConvolutionAnimator:
         self.ax2.cla()
         self.ax3.cla()
 
+        # give each plot a title
         self.ax1.set_title("input sequence")
         self.ax2.set_title("inverted shifted impulse response")
         self.ax3.set_title("output")
 
+        # set the axes so that they don't change as the values change
         self.ax2.set_ylim(0,1.1)
-        # self.ax2.set_
         self.ax3.set_ylim(0,6)
 
         tmp = np.array(self.s2[frame_num::-1])
         tmp = np.pad(tmp, [0, len(self.s1) - len(tmp)])
 
         inner_product = np.sum(self.s1 * tmp)
-
-        # print(inner_product)
         self.output[frame_num] = inner_product
 
-
-        # markerline1, stemlines1, baseline1 = ax1.stem(x, self.s1, '-.')
-        # markerline2, stemlines2, baseline2 = ax2.stem(x, tmp, '-.')
-        # markerline3, stemlines3, baseline3 = ax3.stem(x, output, '-.')
 
         markerline1, stemlines1, baseline1 = self.ax1.stem(x, self.s1, '-.')
         markerline2, stemlines2, baseline2 = self.ax2.stem(x, tmp, '-.')
@@ -120,10 +115,6 @@ class ConvolutionAnimator:
         # return line1, line2, line3
         return markerline1, stemlines1, markerline2, stemlines2, markerline3, stemlines3
 
-
-
-# anim = FuncAnimation(fig, create_convolution_algorithm_animation, #init_func = init, 
-#                      frames = 20, interval = 1, blit = True) 
 
 
 # the regular convolution
