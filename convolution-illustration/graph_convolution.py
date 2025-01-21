@@ -67,18 +67,6 @@ class ConvolutionAnimator:
         self.output = np.zeros(sequence_lengths)
         self.fig, (self.ax1, self.ax2, self.ax3) = plt.subplots(3, 1, figsize=(12, 10))
 
-        self.ax3.set_ylim(0,5)
-
-    def animation_init(self):
-        self.ax1.set_title("input sequence")
-        self.ax2.set_title("inverted shifted impulse response")
-        self.ax2.se
-        self.ax3.set_title("output")
-        markerline1, stemlines1, baseline1 = self.ax1.stem(x, empty, '-.')
-        markerline2, stemlines2, baseline2 = self.ax2.stem(x, empty, '-.')
-        markerline3, stemlines3, baseline3 = self.ax3.stem(x, empty, '-.')
-        return markerline1, stemlines1, baseline1, markerline2, stemlines2, baseline2, markerline3, stemlines3, baseline3
-        # return line1, line2, line3
 
     '''
     Function to call for each frame of the animation. There are 3 plots:
@@ -99,8 +87,11 @@ class ConvolutionAnimator:
         self.ax3.set_title("output")
 
         # set the axes so that they don't change as the values change
-        self.ax2.set_ylim(0,1.1)
-        self.ax3.set_ylim(0,6)
+        self.ax1.set_ylim(0,np.max(self.s1)+1)
+        self.ax2.set_ylim(0,np.max(self.s2)+1)
+        
+        # this axis needs to be set MANUALLY
+        self.ax3.set_ylim(0, 6)
 
         tmp = np.array(self.s2[frame_num::-1])
         tmp = np.pad(tmp, [0, len(self.s1) - len(tmp)])
@@ -132,6 +123,7 @@ anim = FuncAnimation(commutative_animator.fig, commutative_animator.create_convo
                      frames = 20, interval = 200)
 if save_gifs:
     anim.save("commutative-convolution.gif")
-# plt.show()
+else:
+    plt.show()
 
 
